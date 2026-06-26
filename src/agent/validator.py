@@ -35,17 +35,30 @@ def extract_numbers_from_text(text: str) -> list[float]:
 
 
 def get_ground_truth(company: str, metric: str, fiscal_year: int) -> float | None:
-    """
-    Fetch the authoritative value directly from SQLite.
-    Uses longest period_end for the fiscal year — most complete annual figure.
-    """
-    conn = sqlite3.connect(config.SQLITE_DB_PATH)
+    """Fetch the authoritative value directly from SQL Server."""
+    import pyodbc
+    conn = pyodbc.connect(config.SQL_CONNECTION_STRING)
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT value FROM financials
-        WHERE company=? AND metric=? AND fiscal_year=?
-        ORDER BY period_end DESC, filed DESC
-        LIMIT 1
+        SELECT value FROM financials f1
+        WHERE f1.company = ?
+          AND f1.metric = ?
+          AND f1.fiscal_year = ?
+          AND f1.period_end = (
+              SELECT MAX(f2.period_end)
+              FROM financials f2
+              WHERE f2.company = f1.company
+                AND f2.metric = f1.metric
+                AND f2.fiscal_year = f1.fiscal_year
+          )
+          AND f1.filed = (
+              SELECT MAX(f3.filed)
+              FROM financials f3
+              WHERE f3.company = f1.company
+                AND f3.metric = f1.metric
+                AND f3.fiscal_year = f1.fiscal_year
+                AND f3.period_end = f1.period_end
+          )
     """, (company.lower(), metric, fiscal_year))
     row = cursor.fetchone()
     conn.close()

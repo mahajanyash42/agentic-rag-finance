@@ -1,7 +1,5 @@
 import os
 from dotenv import load_dotenv
-
-from dotenv import load_dotenv
 load_dotenv(override=True)
 
 # ── API Keys ──────────────────────────────────────────────
@@ -32,11 +30,23 @@ XBRL_METRICS = [
     "EarningsPerShareBasic",
 ]
 
+# ── Microsoft SQL Server connection ─────────────────────────────────────────────────
+SQL_SERVER   = "Yash"
+SQL_DATABASE = "agentic_rag_finance"
+SQL_DRIVER   = "ODBC Driver 17 for SQL Server"
+
+# Windows Authentication connection string (no username/password needed)
+SQL_CONNECTION_STRING = (
+    f"DRIVER={{{SQL_DRIVER}}};"
+    f"SERVER={SQL_SERVER};"
+    f"DATABASE={SQL_DATABASE};"
+    f"Trusted_Connection=yes;"
+)
+
 # ── Paths ─────────────────────────────────────────────────
-DATA_RAW_DIR        = "data/raw"
-DATA_PROCESSED_DIR  = "data/processed"
-SQLITE_DB_PATH      = "data/processed/financials.db"
-CHROMA_DIR          = "data/processed/chroma"
+DATA_RAW_DIR       = "data/raw"
+DATA_PROCESSED_DIR = "data/processed"
+CHROMA_DIR         = "data/processed/chroma"
 
 # ── Retrieval ─────────────────────────────────────────────
 TOP_K_CHUNKS = 5
