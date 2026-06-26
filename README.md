@@ -104,10 +104,12 @@ pip install -r requirements.txt
 Add your OpenAI API key to `.env`:
 OPENAI_API_KEY=sk-proj-...
 
-**Build the data layer:**
-```bash
-python src/data/ingest_xbrl.py      # pulls SEC XBRL → SQLite
-python src/data/ingest_filings.py   # pulls 10-K text → ChromaDB
+**Prerequisites:** Python 3.11+, OpenAI API key, Microsoft SQL Server (local)
+
+Create a database called `agentic_rag_finance` in SSMS, then add to `.env`:
+```
+OPENAI_API_KEY=sk-proj-...
+SQL_SERVER=YourServerName
 ```
 
 **Run a query:**
@@ -196,9 +198,13 @@ config.py             # Central configuration
 
 ## Tech Stack
 
-- **Orchestration:** LangGraph
-- **LLM:** GPT-4o-mini (OpenAI)
-- **Vector store:** ChromaDB (local)
-- **Structured data:** SQLite via SEC XBRL API
-- **Narrative data:** SEC EDGAR full-text 10-K filings
-- **Embeddings:** OpenAI text-embedding-3-small
+| Component | Choice | Notes |
+|---|---|---|
+| Orchestration | LangGraph | Router + tool nodes + synthesis + validator |
+| LLM | GPT-4o-mini (OpenAI) | Function-calling for router and SQL generation |
+| Vector store | ChromaDB (local) | 154 chunks from 3 companies |
+| Structured data | Microsoft SQL Server | Loaded from SEC XBRL API via pyodbc |
+| Narrative data | SEC EDGAR full-text 10-K filings | Risk Factors + MD&A sections |
+| Embeddings | OpenAI text-embedding-3-small | |
+| Web search | SEC EDGAR full-text search API | For recency queries |
+| Eval | Manual grading + automated routing check | 19 hand-written questions |
