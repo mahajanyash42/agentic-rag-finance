@@ -19,6 +19,7 @@ classifies each question and dispatches it to the appropriate tool —
 vector search, Microsoft SQL Server, or live SEC EDGAR search.
 
 ---
+
 ## Architecture
 
 ```
@@ -51,8 +52,7 @@ User Query
                   │
                   ▼
             Final Answer
-
----
+```
 
 ## Frameworks & Tools Used
 
