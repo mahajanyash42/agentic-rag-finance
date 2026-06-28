@@ -4,9 +4,6 @@ A multi-tool agentic RAG system that analyzes SEC 10-K filings using
 intelligent query routing — directing each question to the right tool 
 rather than applying vector search uniformly.
 
-**TA Project — [Your Professor's Name], [Your University]**  
-**Author:** [Your Name]
-
 ---
 
 ## The Core Problem
