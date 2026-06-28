@@ -19,65 +19,38 @@ classifies each question and dispatches it to the appropriate tool —
 vector search, Microsoft SQL Server, or live SEC EDGAR search.
 
 ---
-
 ## Architecture
+
+```
 User Query
-
-│
-
-▼
-
-┌──────────────────────────────────────┐
-
-│           LangGraph Agent             │
-
-│                                       │
-
-│  ┌─────────┐                          │
-
-│  │ Router  │ (GPT-4o-mini)            │
-
-│  │  Node   │                          │
-
-│  └────┬────┘                          │
-
-│       │                               │
-
-│  narrative ──► Vector Search Node     │
-
-│  numeric   ──► SQL Tool Node          │
-
-│  current   ──► Web Search Node        │
-
-│  cross_doc ──► Vector Search + SQL    │
-
-│       │                               │
-
-│  ┌────▼────┐                          │
-
-│  │Synthesis│ (GPT-4o-mini)            │
-
-│  │  Node   │                          │
-
-│  └────┬────┘                          │
-
-│       │                               │
-
-│  ┌────▼─────┐                         │
-
-│  │Validator │                         │
-
-│  │  Node    │                         │
-
-│  └────┬─────┘                         │
-
-└───────┼───────────────────────────────┘
-
-│
-
-▼
-
-Final Answer
+     │
+     ▼
+ ┌─────────────────────────────────────────┐
+ │            LangGraph Agent              │
+ │                                         │
+ │         ┌──────────────┐                │
+ │         │ Router Node  │ (GPT-4o-mini)  │
+ │         └──────┬───────┘                │
+ │                │                        │
+ │   narrative ───►  Vector Search Node    │
+ │   numeric   ───►  SQL Tool Node         │
+ │   current   ───►  Web Search Node       │
+ │   cross_doc ───►  Vector Search Node    │
+ │                    + SQL Tool Node      │
+ │                │                        │
+ │         ┌──────▼───────┐                │
+ │         │ Synthesis    │ (GPT-4o-mini)  │
+ │         │    Node      │                │
+ │         └──────┬───────┘                │
+ │                │                        │
+ │         ┌──────▼───────┐                │
+ │         │  Validator   │                │
+ │         │    Node      │                │
+ │         └──────┬───────┘                │
+ └────────────────┼────────────────────────┘
+                  │
+                  ▼
+            Final Answer
 
 ---
 
